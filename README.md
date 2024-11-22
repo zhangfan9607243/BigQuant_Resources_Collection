@@ -1,1 +1,1 @@
-# BigQuant ResourcesCollection
+# BigQuant Resources Collection
