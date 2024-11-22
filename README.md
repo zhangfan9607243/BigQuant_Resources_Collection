@@ -1,1 +1,1 @@
-# BigQuant Strategy Collection
+# BigQuant ResourcesCollection
