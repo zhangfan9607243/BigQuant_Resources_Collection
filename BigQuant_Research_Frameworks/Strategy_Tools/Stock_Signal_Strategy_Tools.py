@@ -6,11 +6,7 @@ from datetime import datetime, timedelta
 from bigmodule import M
 from typing import Literal
 
-import sys
-sys.path.append("/home/aiuser/work/userlib/BigQuant_Resources_Collection/BigQuant_Resources_Collection/00_General_Resources/General_Tool")
-from cn_general_tool import *
-
-def cn_stock_strategy_signal_event_df(strategy_sql, sd, ed, instrument_list=[]):
+def get_signal_event_df(strategy_sql, sd, ed, instrument_list=[]):
     
     if instrument_list == []:
         str_ins = "1=1"
@@ -32,10 +28,10 @@ def cn_stock_strategy_signal_event_df(strategy_sql, sd, ed, instrument_list=[]):
     AND {str_ins}
     ORDER BY date, instrument
     """
-    df = get_dai_df(sql, sd, ed)
+    df = dai.query(sql, filters = {"date":[sd, ed]}).df()
     return df  
 
-def cn_stock_strategy_signal_event_pair_df(ins1, ins2, sd, ed):
+def get_signal_event_pair_df(ins1, ins2, sd, ed):
     sql =  f"""
     WITH
     data_ins1 AS (
@@ -90,7 +86,7 @@ def cn_stock_strategy_signal_event_pair_df(ins1, ins2, sd, ed):
     return df
 
 
-def cn_stock_strategy_signal_event_backtest(df, capital_base, holding_days, is_trade_by_weight=True):
+def backtest_signal_event_strategy(df, capital_base, holding_days, is_trade_by_weight=True):
 
     def BigTrader_Initialize(context):
         from bigtrader.finance.commission import PerOrder
@@ -161,8 +157,8 @@ def cn_stock_strategy_signal_event_backtest(df, capital_base, holding_days, is_t
         backtest_engine_mode="""标准模式""",
         before_start_days=0,
         volume_limit=1,
-        order_price_field_buy="""close""",
-        order_price_field_sell="""close""",
+        order_price_field_buy="""open""",
+        order_price_field_sell="""open""",
         benchmark="""沪深300指数""",
         
         plot_charts=True,
